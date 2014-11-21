@@ -44,6 +44,7 @@ import org.zkoss.poi.xssf.usermodel.XSSFSheet;
 import org.zkoss.poi.xssf.usermodel.XSSFWorkbook;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zul.Auxhead;
+import org.zkoss.zul.Grid;
 import org.zkoss.zul.impl.HeaderElement;
 import org.zkoss.zul.impl.MeshElement;
 
@@ -143,6 +144,26 @@ public class ExcelExporter extends AbstractExporter <XSSFWorkbook, Row> {
 		
 		book.write(outputStream);
 		setExportContext(null);
+	}
+
+	@Override
+	protected void exportTabularComponent(List<Grid> components,
+			OutputStream outputStream) throws Exception {
+		XSSFWorkbook book = new XSSFWorkbook();
+		setExportContext(new ExportContext(true, book.createSheet("Sheet1")));
+		
+		for (Grid component : components) {
+			int columnSize = getHeaderSize(component);
+			exportHeaders(columnSize, component, book);
+			exportRows(columnSize, component, book);
+			exportFooters(columnSize, component, book);
+			
+			adjustColumnWidth(columnSize);
+		}
+
+		book.write(outputStream);
+		setExportContext(null);
+		
 	}
 
 	@Override
@@ -396,7 +417,6 @@ public class ExcelExporter extends AbstractExporter <XSSFWorkbook, Row> {
 			_columnHeaders = columnHeaders;
 		}
 		
-		@Override
 		public void beforeRendering(XSSFWorkbook book) {
 			int columnSize = _columnHeaders.length;
 			boolean renderHeader = false;
@@ -417,7 +437,6 @@ public class ExcelExporter extends AbstractExporter <XSSFWorkbook, Row> {
 			}
 		}
 
-		@Override
 		public void afterRendering(XSSFWorkbook book) {
 		}
 	}

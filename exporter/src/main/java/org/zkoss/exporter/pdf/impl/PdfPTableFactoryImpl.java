@@ -26,7 +26,6 @@ import com.lowagie.text.pdf.PdfPTable;
  */
 public class PdfPTableFactoryImpl implements PdfPTableFactory {
 
-	@Override
 	public PdfPTable getPdfPTable(int columnSize) {
 		PdfPTable table = new PdfPTable(columnSize);
 		table.setHeaderRows(1);

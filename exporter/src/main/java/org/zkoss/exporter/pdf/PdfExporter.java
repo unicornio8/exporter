@@ -25,6 +25,7 @@ import static org.zkoss.exporter.util.Utils.getStringValue;
 import static org.zkoss.exporter.util.Utils.getTarget;
 import static org.zkoss.exporter.util.Utils.invokeComponentGetter;
 
+import java.awt.Color;
 import java.io.OutputStream;
 import java.util.Collection;
 import java.util.HashMap;
@@ -42,6 +43,7 @@ import org.zkoss.exporter.pdf.impl.PdfWriterFactoryImpl;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zul.Auxhead;
 import org.zkoss.zul.Auxheader;
+import org.zkoss.zul.Grid;
 import org.zkoss.zul.impl.HeaderElement;
 import org.zkoss.zul.impl.MeshElement;
 
@@ -51,6 +53,7 @@ import com.lowagie.text.Font;
 import com.lowagie.text.Phrase;
 import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPTable;
+import com.lowagie.text.pdf.draw.LineSeparator;
 
 
 /**
@@ -132,6 +135,31 @@ public class PdfExporter extends AbstractExporter<PdfPTable, PdfPTable> {
 		getPdfWriterFactory().getPdfWriter(document, outputStream);
 		document.open();
 		
+		PdfPTable table = createTableFromComponent(component);
+
+		document.add(table);
+		document.close();
+	}
+	
+
+	@Override
+	protected void exportTabularComponent(List<Grid> components, OutputStream outputStream) throws Exception {
+		Document document = getDocumentFactory().getDocument();
+		getPdfWriterFactory().getPdfWriter(document, outputStream);
+		document.open();
+		
+		for (Grid grid : components) {
+			PdfPTable table = createTableFromComponent(grid);
+			document.add(table);
+			document.add(new LineSeparator(0.5f, 95, Color.GREEN , Element.ALIGN_CENTER, 3.5f));
+			document.add(new LineSeparator(1, 100, null, Element.ALIGN_CENTER, -2));
+		}
+
+		document.close();
+		
+	}
+
+	private PdfPTable createTableFromComponent(MeshElement component){
 		int columnSize = getHeaderSize(component);
 		PdfPTable table = getPdfPTableFactory().getPdfPTable(columnSize);
 		
@@ -144,11 +172,9 @@ public class PdfExporter extends AbstractExporter<PdfPTable, PdfPTable> {
 		
 		if (getInterceptor() != null)
 			getInterceptor().afterRendering(table);
-		
-		document.add(table);
-		document.close();
+		return table;
 	}
-	
+		
 	protected void exportFooters(int columnSize, Component target, PdfPTable table) {
 		Component footers = getFooters(target);
 		if (footers == null) {
@@ -200,7 +226,8 @@ public class PdfExporter extends AbstractExporter<PdfPTable, PdfPTable> {
 		
 		return headers;
 	}
-	
+
+	@Override
 	protected void exportCells(int rowIndex, int columnSize, Component row, PdfPTable table) {
 		HashMap<Integer, Component> headers = buildHeaderIndexMap(getHeaders(getTarget(row)));
 		
@@ -242,7 +269,7 @@ public class PdfExporter extends AbstractExporter<PdfPTable, PdfPTable> {
 		}
 		return false;
 	}
-	
+	@Override
 	protected void exportAuxhead(int columnSize, Auxhead auxhead, PdfPTable table) {
 		List<Component> children = auxhead.getChildren();
 		
@@ -416,7 +443,6 @@ public class PdfExporter extends AbstractExporter<PdfPTable, PdfPTable> {
 			_columnHeaders = columnHeaders;
 		}
 
-		@Override
 		public void beforeRendering(PdfPTable table) {
 			int columnSize = _columnHeaders.length;
 			boolean renderHeader = false;
@@ -439,8 +465,8 @@ public class PdfExporter extends AbstractExporter<PdfPTable, PdfPTable> {
 			}
 		}
 
-		@Override
 		public void afterRendering(PdfPTable table) {
 		}
 	}
+
 }

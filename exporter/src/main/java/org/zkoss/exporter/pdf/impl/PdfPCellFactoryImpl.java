@@ -48,7 +48,6 @@ public class PdfPCellFactoryImpl implements PdfPCellFactory {
 	
 	protected JoinCellEvent headerEventJoiner = new JoinCellEventImpl(new PdfPCellEvent() {
 
-		@Override
 		public void cellLayout(PdfPCell cell, Rectangle position, PdfContentByte[] canvases) {
 			PdfContentByte pdfContentByte = canvases[PdfPTable.BACKGROUNDCANVAS];
 			URL resource = PdfExporter.class.getResource("column-bg.png");
@@ -69,7 +68,6 @@ public class PdfPCellFactoryImpl implements PdfPCellFactory {
 	});
 	protected JoinCellEvent groupEventJoiner = new JoinCellEventImpl(new PdfPCellEvent() {
 
-		@Override
 		public void cellLayout(PdfPCell cell, Rectangle position, PdfContentByte[] canvases) {
 			PdfContentByte pdfContentByte = canvases[PdfPTable.BACKGROUNDCANVAS];
 			Image image;
@@ -91,7 +89,6 @@ public class PdfPCellFactoryImpl implements PdfPCellFactory {
 	
 	protected JoinCellEvent groupfootEventJoiner = new JoinCellEventImpl(new PdfPCellEvent() {
 
-		@Override
 		public void cellLayout(PdfPCell cell, Rectangle position, PdfContentByte[] canvases) {
 			PdfContentByte pdfContentByte = canvases[PdfPTable.BACKGROUNDCANVAS];
 			Image image;
@@ -111,7 +108,6 @@ public class PdfPCellFactoryImpl implements PdfPCellFactory {
 		}
 	});
 	
-	@Override
 	public PdfPCell getHeaderCell() {
 		PdfPCell cell = new PdfPCell();
 		cell.setPaddingTop(8);
@@ -126,7 +122,6 @@ public class PdfPCellFactoryImpl implements PdfPCellFactory {
 		return cell;
 	}
 
-	@Override
 	public PdfPCell getCell(boolean isOddRow) {
 		PdfPCell cell = getDefaultPdfPCell();
 		if (isOddRow)
@@ -134,14 +129,12 @@ public class PdfPCellFactoryImpl implements PdfPCellFactory {
 		return cell;
 	}
 
-	@Override
 	public PdfPCell getGroupCell() {
 		PdfPCell cell = getDefaultPdfPCell();
 		cell.setCellEvent((PdfPCellEvent)groupEventJoiner);
 		return cell;
 	}
 
-	@Override
 	public PdfPCell getGroupfootCell() {
 		PdfPCell cell = new PdfPCell();
 		cell.setBorderColor(defaultBorderColor);
@@ -155,7 +148,6 @@ public class PdfPCellFactoryImpl implements PdfPCellFactory {
 		return cell;
 	}
 
-	@Override
 	public PdfPCell getFooterCell() {
 		PdfPCell cell = new PdfPCell();
 		cell.setBorderColor(defaultBorderColor);

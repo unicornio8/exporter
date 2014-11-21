@@ -26,7 +26,6 @@ import com.lowagie.text.Document;
  */
 public class DocumentFactoryImpl implements DocumentFactory {
 
-	@Override
 	public Document getDocument() {
 		return new Document();
 	}

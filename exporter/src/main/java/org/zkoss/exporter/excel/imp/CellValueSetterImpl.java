@@ -41,7 +41,6 @@ public class CellValueSetterImpl implements CellValueSetter <Component> {
 		_dateParser = new DateParser(_locale);
 	}
 	
-	@Override
 	public void setCellValue(Component component, Cell cell) {
 		setCellValue(getStringValue(component), cell);
 	}

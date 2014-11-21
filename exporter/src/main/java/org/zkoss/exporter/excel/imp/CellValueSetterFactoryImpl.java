@@ -30,7 +30,6 @@ import org.zkoss.zk.ui.Component;
  */
 public class CellValueSetterFactoryImpl implements CellValueSetterFactory {
 
-	@Override
 	public <T> CellValueSetter<T> getCellValueSetter(Class<T> cls) {
 		if (cls.isAssignableFrom(Component.class)) {
 			return (CellValueSetter<T>)new CellValueSetterImpl(getLocale());

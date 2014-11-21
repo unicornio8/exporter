@@ -16,16 +16,17 @@ Copyright (C) 2012 Potix Corporation. All Rights Reserved.
 */
 package org.zkoss.exporter.util;
 
-import static org.zkoss.exporter.util.Utils.getHeaders;
-import static org.zkoss.exporter.util.Utils.invokeComponentGetter;
-
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
 
 import org.zkoss.zk.ui.Component;
+import org.zkoss.zul.Auxhead;
+import org.zkoss.zul.Auxheader;
+import org.zkoss.zul.Cell;
 import org.zkoss.zul.Listitem;
 import org.zkoss.zul.Row;
+import org.zkoss.zul.Rows;
 import org.zkoss.zul.impl.HeadersElement;
 import org.zkoss.zul.impl.MeshElement;
 
@@ -53,6 +54,9 @@ public class Utils {
 	}
 	
 	public static String getStringValue(Component component) {
+		if (component instanceof Cell) {
+			component = component.getChildren().get(0);
+		}
 		return (String)invokeComponentGetter(component, "getLabel", "getText", "getValue");
 	}
 	
@@ -63,11 +67,23 @@ public class Utils {
 	public static int getHeaderSize(Component target) {
 		Component headers = getHeaders(target);
 		if (headers != null) {
-			return headers.getChildren().size();
+			int columnsCounter = 0;
+			List<Component> columns = headers.getChildren();
+			for (Component column : columns) {
+				if (column instanceof Auxheader) {
+					columnsCounter += ((Auxheader)column).getColspan();
+				} else {
+					columnsCounter += 1;
+				}
+			}
+			return columnsCounter;
 		}
 		
 		//cannot find head component, guess size by row child side
 		List<Component> children = target.getChildren();
+		if (children.size() == 1 && children.get(0) instanceof Rows) {
+			children = children.get(0).getChildren();
+		}
 		int size = 0;
 		for (Component cmp : children) {
 			if (cmp instanceof Listitem || cmp instanceof Row) {
@@ -78,8 +94,8 @@ public class Utils {
 	}
 	
 	public static Component getHeaders(Component target) {
-		for(Component cmp : target.getChildren()) {
-			if (cmp instanceof HeadersElement) {
+ 		for(Component cmp : target.getChildren()) {
+			if (cmp instanceof HeadersElement || cmp instanceof Auxhead || cmp instanceof Auxheader) {
 				return cmp;
 			}
 		}

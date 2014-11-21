@@ -40,17 +40,14 @@ public class JoinCellEventImpl implements JoinCellEvent, PdfPCellEvent {
 		}
 	}
 	
-	@Override
 	public void addEvent(PdfPCellEvent event) {
 		_events.add(event);
 	}
 	
-	@Override
 	public void removeEvent(PdfPCellEvent event) {
 		_events.remove(event);
 	}
 
-	@Override
 	public void cellLayout(PdfPCell cell, Rectangle position, PdfContentByte[] canvases) {
 		Iterator<PdfPCellEvent> iterator = _events.iterator();
 		while (iterator.hasNext()) {

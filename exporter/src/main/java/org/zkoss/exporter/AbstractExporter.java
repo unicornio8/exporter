@@ -18,6 +18,7 @@ package org.zkoss.exporter;
 
 import static org.zkoss.exporter.util.Utils.invokeComponentGetter;
 
+import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 import java.util.Collection;
 import java.util.List;
@@ -106,6 +107,15 @@ public abstract class AbstractExporter <E, T> {
 	 * @throws Exception
 	 */
 	protected abstract void exportTabularComponent(MeshElement component, OutputStream outputStream) throws Exception;
+	
+	
+	/**
+	 * Export list for tabular component
+	 * @param components
+	 * @param outputStream
+	 * @throws Exception
+	 */
+	protected abstract void exportTabularComponent(List<Grid> components, OutputStream outputStream) throws Exception;
 	
 	/**
 	 * Export data 
@@ -221,6 +231,24 @@ public abstract class AbstractExporter <E, T> {
 		}
 	}
 	
+	
+	/**
+	 * Export an array of tables or grids
+	 * @param exportGrids
+	 * @param out
+	 * @throws Exception 
+	 */
+	public void export(List<Grid> components, OutputStream outputStream) throws Exception {
+		if (components == null)
+			throw new RuntimeException("export target reference is null");
+		
+		if (components instanceof List) {
+			exportTabularComponent(components, outputStream);
+		} else {
+			throw new RuntimeException("Component not support export to PDF");
+		}
+	}
+
 	/**
 	 * Sets {@link Interceptor}
 	 * 

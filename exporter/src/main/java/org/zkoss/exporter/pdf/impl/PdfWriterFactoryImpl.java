@@ -29,7 +29,6 @@ import com.lowagie.text.pdf.PdfWriter;
  */
 public class PdfWriterFactoryImpl implements PdfWriterFactory {
 
-	@Override
 	public PdfWriter getPdfWriter(Document document, OutputStream os) throws Exception {
 		return PdfWriter.getInstance(document, os);
 	}
